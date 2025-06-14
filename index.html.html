@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gauss-Jordan Elimination Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #560bad;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+        
+        h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .control-panel {
+            background-color: var(--light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        input[type="number"] {
+            padding: 0.5rem 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 80px;
+            transition: all 0.3s;
+            -moz-appearance: textfield;
+        }
+        
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"]:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .matrix-input {
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+        
+        .matrix-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        table {
+            border-collapse: collapse;
+            margin: 1rem 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 0.8rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 500;
+        }
+        
+        td {
+            background-color: white;
+        }
+        
+        input.matrix-cell {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1rem;
+            transition: all 0.3s;
+            -moz-appearance: textfield;
+        }
+        
+        input.matrix-cell::-webkit-outer-spin-button,
+        input.matrix-cell::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input.matrix-cell:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .result-container {
+            margin-top: 2rem;
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .steps-container {
+            margin-top: 2rem;
+        }
+        
+        .step {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--accent);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .step-title {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .step-description {
+            background-color: var(--light);
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .solution-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+        
+        .success {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+        
+        .warning {
+            background-color: rgba(248, 150, 30, 0.1);
+            border-left: 4px solid var(--warning);
+            color: var(--warning);
+        }
+        
+        .danger {
+            background-color: rgba(247, 37, 133, 0.1);
+            border-left: 4px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .info {
+            background-color: rgba(86, 11, 173, 0.1);
+            border-left: 4px solid var(--info);
+            color: var(--info);
+        }
+        
+        .pivot {
+            background-color: rgba(67, 97, 238, 0.15);
+            font-weight: bold;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .fraction span {
+            display: block;
+        }
+        
+        .fraction .numerator {
+            border-bottom: 1px solid black;
+            padding: 0 0.2em;
+        }
+        
+        .fraction .denominator {
+            padding: 0 0.2em;
+        }
+        
+        .undefined {
+            color: var(--danger);
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .control-panel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gauss-Jordan Elimination Calculator</h1>
+            <p class="header-description">Solve systems of linear equations step-by-step</p>
+        </header>
+        
+        <div class="content">
+            <div class="control-panel">
+                <div class="form-group">
+                    <label for="rows">Rows</label>
+                    <input type="number" id="rows" min="1" max="10" value="3">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cols">Columns</label>
+                    <input type="number" id="cols" min="2" max="10" value="4">
+                </div>
+                
+                <button onclick="createMatrix()">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Create Matrix
+                </button>
+            </div>
+            
+            <div class="matrix-input">
+                <h3 class="matrix-title">Enter Matrix</h3>
+                <div id="matrix-container"></div>
+            </div>
+            
+            <button onclick="solve()" style="margin-top: 1rem;">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.75 6.75L19.25 12L13.75 17.25M5.75 12H19.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Solve with Gauss-Jordan
+            </button>
+            
+            <div class="result-container" id="result" style="display: none;">
+                <h3 class="result-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Final Result
+                </h3>
+                <div id="final-matrix"></div>
+                <div id="solution-message"></div>
+            </div>
+            
+            <div class="steps-container" id="steps"></div>
+        </div>
+        
+        <footer>
+            <p>Gauss-Jordan Elimination Calculator &copy; 2023</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Fungsi untuk mencari FPB (Faktor Persekutuan Terbesar)
+        function gcd(a, b) {
+            if (b < 0.0000001) return a; // Mengatasi masalah floating point
+            return gcd(b, Math.floor(a % b));
+        }
+        
+        // Fungsi untuk mengubah desimal menjadi pecahan
+        function decimalToFraction(decimal) {
+            if (isNaN(decimal)) return '<span class="undefined">undefined</span>';
+            if (decimal === 0) return '0';
+            if (Number.isInteger(decimal)) return decimal.toString();
+            
+            const len = decimal.toString().length - 2;
+            let denominator = Math.pow(10, len);
+            let numerator = decimal * denominator;
+            
+            // Sederhanakan pecahan
+            const divisor = gcd(numerator, denominator);
+            numerator /= divisor;
+            denominator /= divisor;
+            
+            // Handle kasus NaN/NaN
+            if (isNaN(numerator) || isNaN(denominator)) {
+                return '<span class="undefined">undefined</span>';
+            }
+            
+            if (denominator === 1) return numerator.toString();
+            
+            return `<div class="fraction">
+                <span class="numerator">${numerator}</span>
+                <span class="denominator">${denominator}</span>
+            </div>`;
+        }
+        
+        // Fungsi untuk memformat angka menjadi pecahan atau bilangan bulat
+        function formatNumber(num) {
+            if (Math.abs(num) < 0.0000001) return '0';
+            return decimalToFraction(num);
+        }
+        
+        function createMatrix() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            const container = document.getElementById('matrix-container');
+            
+            let table = '<table><thead><tr><th></th>';
+            
+            // Header kolom
+            for (let j = 0; j < cols; j++) {
+                if (j === cols - 1) {
+                    table += `<th>Result</th>`;
+                } else {
+                    table += `<th>x<sub>${j + 1}</sub></th>`;
+                }
+            }
+            table += '</tr></thead><tbody>';
+            
+            // Isi matriks
+            for (let i = 0; i < rows; i++) {
+                table += `<tr><th>Row ${i + 1}</th>`;
+                for (let j = 0; j < cols; j++) {
+                    table += `<td><input type="number" class="matrix-cell" id="m${i}${j}" value="${i === j ? 1 : 0}" step="any"></td>`;
+                }
+                table += '</tr>';
+            }
+            
+            table += '</tbody></table>';
+            container.innerHTML = table;
+            
+            // Sembunyikan hasil sebelumnya
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('steps').innerHTML = '';
+        }
+        
+        function getMatrix() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            const matrix = [];
+            
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = parseFloat(document.getElementById(`m${i}${j}`).value) || 0;
+                    row.push(value);
+                }
+                matrix.push(row);
+            }
+            
+            return matrix;
+        }
+        
+        function solve() {
+            const matrix = getMatrix();
+            const stepsDiv = document.getElementById('steps');
+            const resultDiv = document.getElementById('result');
+            const finalMatrixDiv = document.getElementById('final-matrix');
+            const solutionMessageDiv = document.getElementById('solution-message');
+            
+            stepsDiv.innerHTML = '';
+            resultDiv.style.display = 'none';
+            
+            const steps = gaussJordan(matrix);
+            
+            // Tampilkan semua langkah
+            steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'step';
+                
+                let stepContent = `
+                    <div class="step-header">
+                        <h4 class="step-title">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Step ${index + 1}
+                        </h4>
+                    </div>
+                    ${matrixToHTML(step.matrix, step.pivot)}
+                    <div class="step-description">${step.description}</div>
+                `;
+                
+                stepDiv.innerHTML = stepContent;
+                stepsDiv.appendChild(stepDiv);
+            });
+            
+            // Tampilkan hasil akhir
+            const finalMatrix = steps[steps.length - 1].matrix;
+            finalMatrixDiv.innerHTML = matrixToHTML(finalMatrix);
+            
+            // Cek solusi
+            const solutionInfo = checkSolution(finalMatrix);
+            solutionMessageDiv.className = `solution-message ${solutionInfo.class}`;
+            solutionMessageDiv.innerHTML = solutionInfo.message;
+            
+            // Tampilkan hasil
+            resultDiv.style.display = 'block';
+            
+            // Scroll ke hasil
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function gaussJordan(matrix) {
+            const steps = [];
+            const rows = matrix.length;
+            const cols = matrix[0].length;
+            
+            // Salin matriks untuk menghindari modifikasi langsung
+            const workMatrix = JSON.parse(JSON.stringify(matrix));
+            
+            // Catat matriks awal
+            steps.push({
+                matrix: JSON.parse(JSON.stringify(workMatrix)),
+                description: "Initial matrix before elimination",
+                pivot: null
+            });
+            
+            for (let col = 0, row = 0; col < cols - 1 && row < rows; col++) {
+                // Temukan baris dengan elemen pivot terbesar (untuk mengurangi error pembulatan)
+                let maxRow = row;
+                for (let i = row + 1; i < rows; i++) {
+                    if (Math.abs(workMatrix[i][col]) > Math.abs(workMatrix[maxRow][col])) {
+                        maxRow = i;
+                    }
+                }
+                
+                // Tukar baris jika diperlukan
+                if (maxRow !== row) {
+                    [workMatrix[row], workMatrix[maxRow]] = [workMatrix[maxRow], workMatrix[row]];
+                    steps.push({
+                        matrix: JSON.parse(JSON.stringify(workMatrix)),
+                        description: `Swapped row ${row + 1} with row ${maxRow + 1} to get largest pivot`,
+                        pivot: { row, col }
+                    });
+                }
+                
+                // Jika elemen pivot adalah 0, kolom ini sudah dieliminasi
+                if (Math.abs(workMatrix[row][col]) < 0.0000001) {
+                    steps.push({
+                        matrix: JSON.parse(JSON.stringify(workMatrix)),
+                        description: `Pivot element at row ${row + 1}, column ${col + 1} is 0 (can be ignored)`,
+                        pivot: { row, col }
+                    });
+                    continue;
+                }
+                
+                // Buat elemen pivot menjadi 1
+                const pivot = workMatrix[row][col];
+                if (Math.abs(pivot - 1) > 0.0000001) {
+                    for (let j = col; j < cols; j++) {
+                        workMatrix[row][j] /= pivot;
+                    }
+                    steps.push({
+                        matrix: JSON.parse(JSON.stringify(workMatrix)),
+                        description: `Divided row ${row + 1} by ${formatNumber(pivot)} to make pivot 1`,
+                        pivot: { row, col }
+                    });
+                }
+                
+                // Eliminasi kolom ini di baris lain
+                for (let i = 0; i < rows; i++) {
+                    if (i !== row && Math.abs(workMatrix[i][col]) > 0.0000001) {
+                        const factor = workMatrix[i][col];
+                        for (let j = col; j < cols; j++) {
+                            workMatrix[i][j] -= factor * workMatrix[row][j];
+                        }
+                        steps.push({
+                            matrix: JSON.parse(JSON.stringify(workMatrix)),
+                            description: `Subtracted ${formatNumber(factor)} times row ${row + 1} from row ${i + 1} to eliminate column ${col + 1}`,
+                            pivot: { row, col }
+                        });
+                    }
+                }
+                
+                row++;
+            }
+            
+            return steps;
+        }
+        
+        function matrixToHTML(matrix, pivot = null) {
+            let html = '<table><tbody>';
+            for (let i = 0; i < matrix.length; i++) {
+                html += '<tr>';
+                for (let j = 0; j < matrix[i].length; j++) {
+                    // Format angka menjadi pecahan
+                    const value = Math.abs(matrix[i][j]) < 0.0000001 ? 0 : matrix[i][j];
+                    const formattedValue = formatNumber(value);
+                    const isPivot = pivot && pivot.row === i && pivot.col === j;
+                    html += `<td class="${isPivot ? 'pivot' : ''}">${formattedValue}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            return html;
+        }
+        
+        function checkSolution(matrix) {
+            const rows = matrix.length;
+            const cols = matrix[0].length;
+            
+            // Cek untuk solusi unik, tidak ada solusi, atau solusi tak terhingga
+            for (let i = 0; i < rows; i++) {
+                let allZero = true;
+                for (let j = 0; j < cols - 1; j++) {
+                    if (Math.abs(matrix[i][j]) > 0.0000001) {
+                        allZero = false;
+                        break;
+                    }
+                }
+                
+                if (allZero && Math.abs(matrix[i][cols - 1]) > 0.0000001) {
+                    return {
+                        class: 'danger',
+                        message: 'System has no solution (contradiction found)'
+                    };
+                }
+            }
+            
+            // Hitung rank matriks koefisien dan augmented
+            let rankA = 0, rankAB = 0;
+            for (let i = 0; i < rows; i++) {
+                let nonZeroRow = false;
+                for (let j = 0; j < cols - 1; j++) {
+                    if (Math.abs(matrix[i][j]) > 0.0000001) {
+                        nonZeroRow = true;
+                        break;
+                    }
+                }
+                if (nonZeroRow) rankA++;
+                
+                let nonZeroRowAB = false;
+                for (let j = 0; j < cols; j++) {
+                    if (Math.abs(matrix[i][j]) > 0.0000001) {
+                        nonZeroRowAB = true;
+                        break;
+                    }
+                }
+                if (nonZeroRowAB) rankAB++;
+            }
+            
+            if (rankA < rankAB) {
+                return {
+                    class: 'danger',
+                    message: 'System has no solution (inconsistent)'
+                };
+            } else if (rankA < cols - 1) {
+                const freeVars = cols - 1 - rankA;
+                return {
+                    class: 'warning',
+                    message: `System has infinitely many solutions with ${freeVars} free variables`
+                };
+            } else {
+                let solutions = '';
+                if (rankA === cols - 1 && rankA === rows) {
+                    solutions = '<div style="margin-top: 10px;">Solution:';
+                    for (let i = 0; i < rows; i++) {
+                        solutions += ` x<sub>${i + 1}</sub> = ${formatNumber(matrix[i][cols - 1])};`;
+                    }
+                    solutions += '</div>';
+                }
+                
+                return {
+                    class: 'success',
+                    message: 'System has a unique solution' + solutions
+                };
+            }
+        }
+        
+        // Buat matriks default saat halaman dimuat
+        window.onload = createMatrix;
+    </script>
+</body>
+</html>
