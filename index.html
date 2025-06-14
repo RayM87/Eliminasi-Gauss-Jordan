@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Eliminasi Gauss-Jordan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kalkulator Eliminasi Gauss-Jordan</h1>
+        </header>
+        
+        <div class="content">
+            <div class="control-panel">
+                <div class="form-group">
+                    <label for="rows">Jumlah Baris</label>
+                    <input type="number" id="rows" min="1" max="10" value="3">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cols">Jumlah Kolom</label>
+                    <input type="number" id="cols" min="2" max="10" value="4">
+                </div>
+                
+                <button onclick="createMatrix()">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Buat Matriks
+                </button>
+            </div>
+            
+            <div class="matrix-input">
+                <h3 class="matrix-title">Masukkan Matriks</h3>
+                <div id="matrix-container"></div>
+            </div>
+            
+            <button onclick="solve()" style="margin-top: 1rem;">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.75 6.75L19.25 12L13.75 17.25M5.75 12H19.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Selesaikan dengan Gauss-Jordan
+            </button>
+            
+            <div class="result-container" id="result" style="display: none;">
+                <h3 class="result-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Hasil Akhir
+                </h3>
+                <div id="final-matrix"></div>
+                <div id="solution-message"></div>
+            </div>
+            
+            <div class="steps-container" id="steps"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

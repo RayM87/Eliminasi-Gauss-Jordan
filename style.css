@@ -1,0 +1,329 @@
+:root {
+    --primary: #4361ee;
+    --secondary: #3f37c9;
+    --accent: #4895ef;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --success: #4cc9f0;
+    --danger: #f72585;
+    --warning: #f8961e;
+    --info: #560bad;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 2rem;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+header {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+
+.content {
+    padding: 2rem;
+}
+
+.control-panel {
+    background-color: var(--light);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    color: var(--dark);
+    font-weight: 500;
+}
+
+input[type="number"] {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 80px;
+    transition: all 0.3s;
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"]:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+button {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(to right, var(--secondary), var(--primary));
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.matrix-input {
+    margin: 2rem 0;
+    overflow-x: auto;
+}
+
+.matrix-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 1rem 0;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+    border: 1px solid #e0e0e0;
+    padding: 0.8rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+th {
+    background-color: var(--light);
+    font-weight: 500;
+}
+
+td {
+    background-color: white;
+}
+
+input.matrix-cell {
+    width: 60px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1rem;
+    transition: all 0.3s;
+    -moz-appearance: textfield;
+}
+
+input.matrix-cell::-webkit-outer-spin-button,
+input.matrix-cell::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input.matrix-cell:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+}
+
+.result-container {
+    margin-top: 2rem;
+    background-color: var(--light);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.steps-container {
+    margin-top: 2rem;
+}
+
+.step {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid var(--accent);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.step-title {
+    font-size: 1.1rem;
+    color: var(--secondary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-description {
+    background-color: var(--light);
+    padding: 0.8rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    border-left: 3px solid var(--accent);
+}
+
+.solution-message {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.success {
+    background-color: rgba(76, 201, 240, 0.1);
+    border-left: 4px solid var(--success);
+    color: var(--success);
+}
+
+.warning {
+    background-color: rgba(248, 150, 30, 0.1);
+    border-left: 4px solid var(--warning);
+    color: var(--warning);
+}
+
+.danger {
+    background-color: rgba(247, 37, 133, 0.1);
+    border-left: 4px solid var(--danger);
+    color: var(--danger);
+}
+
+.info {
+    background-color: rgba(86, 11, 173, 0.1);
+    border-left: 4px solid var(--info);
+    color: var(--info);
+}
+
+.pivot {
+    background-color: rgba(67, 97, 238, 0.15);
+    font-weight: bold;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+.fraction {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.fraction span {
+    display: block;
+}
+
+.fraction .numerator {
+    border-bottom: 1px solid black;
+    padding: 0 0.2em;
+}
+
+.fraction .denominator {
+    padding: 0 0.2em;
+}
+
+.undefined {
+    color: var(--danger);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .control-panel {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    body {
+        padding: 1rem;
+    }
+    
+    .content {
+        padding: 1rem;
+    }
+}
